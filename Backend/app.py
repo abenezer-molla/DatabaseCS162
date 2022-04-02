@@ -4,7 +4,9 @@ from flask_cors import CORS
 from datetime import datetime
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/cs162'
-db = SQLAlchemy(app)
+db = SQLAlchemy(
+    app,
+    engine_options={'connect_args': {'connect_timeout': 1000}})
 CORS(app)
 
 
@@ -88,4 +90,4 @@ def update_event(id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=9090)
+    app.run(debug=True, port=7070)
