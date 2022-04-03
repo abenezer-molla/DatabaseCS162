@@ -47,7 +47,7 @@ class Seller(db.Model):
     seller_firstName = db.Column(db.String(100), nullable=False)
     seller_lastName = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
-    phoneNumber = db.Column(db.Integer, nullable=False)
+    phoneNumber = db.Column(db.BigInteger, nullable=False)
     AddressLine1 = db.Column(db.String(100), nullable=False)
     AddressLine2 = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime, nullable=False,
@@ -104,7 +104,7 @@ class Offices(db.Model):
 
     office_id = db.Column(db.Integer, primary_key=True)
     office_name = db.Column(db.String(100), nullable=False)
-    office_phoneNumber = db.Column(db.Integer, nullable=False)
+    office_phoneNumber = db.Column(db.BigInteger, nullable=False)
     office_adressLine1 = db.Column(db.String(100), nullable=False)
     office_adressLine2 = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False,
@@ -157,7 +157,7 @@ class Buyer(db.Model):
     buyer_id = db.Column(db.Integer, primary_key=True)
     buyer_firstName = db.Column(db.String(100), nullable=False)
     buyer_lastName = db.Column(db.String(100), nullable=False)
-    buyer_phoneNumber = db.Column(db.String(100), nullable=False)
+    buyer_phoneNumber = db.Column(db.BigInteger, nullable=False)
     buyer_email = db.Column(db.String(100), nullable=False)
     buyer_AddressLine1 = db.Column(db.String(100), nullable=False)
     buyer_AddressLine2 = db.Column(db.String(100), nullable=False)
@@ -221,7 +221,7 @@ def create_event():
 @app.route('/agent',  methods=["GET"])
 def get_events():
 
-    events = Event.query.order_by(Event.id.asc()).all()
+    events = Agent.query.order_by(Agent.agent_id.asc()).all()
     event_list = []
     for event in events:
         event_list.append(format_event(event))
@@ -230,28 +230,53 @@ def get_events():
 
 
 @app.route('/agent/<agent_id>', methods=['GET'])
-def get_event(id):
+def get_event(agent_id):
 
-    event = Event.query.filter_by(id=id).one()
+    event = Agent.query.filter_by(agent_id=agent_id).one()
     formatted_event = format_event(event)
     return {'event': formatted_event}
 
 
 @app.route('/agent/<agent_id>', methods=['DELETE'])
-def delete_event(id):
-    event = Event.query.filter_by(id=id).one()
+def delete_event(agent_id):
+    event = Agent.query.filter_by(agent_id=agent_id).one()
     db.session.delete(event)
     db.session.commit()
     return 'Event is Deleted!'
 
 
 @app.route('/agent/<agent_id>', methods=['PUT'])
-def update_event(id):
+def update_event(agent_id):
+    event = Agent.query.filter_by(agent_id=agent_id)
+    agent_firstName = request.json['agent_firstName']
 
-    event = Event.query.filter_by(id=id)
-    description = request.json['description']
-    event.update(dict(description=description, created_at=datetime.utcnow()))
+    event.update(dict(agent_firstName=agent_firstName,
+                 created_at=datetime.utcnow()))
+
+    '''
+
+    agent_lastName = request.json['agent_lastName']
+
+    event.update(dict(agent_lastName=agent_lastName,
+                 created_at=datetime.utcnow()))
+
+    email = request.json['email']
+
+    event.update(dict(email=email,
+                 created_at=datetime.utcnow()))
+    phoneNumber = request.json['phoneNumber']
+    event.update(dict(phoneNumber=phoneNumber,
+                 created_at=datetime.utcnow()))
+    AddressLine1 = request.json['AddressLine1']
+    event.update(dict(AddressLine1=AddressLine1,
+                 created_at=datetime.utcnow()))
+    AddressLine2 = request.json['AddressLine2']
+    event.update(dict(AddressLine2=AddressLine2,
+                 created_at=datetime.utcnow()))
+
+    '''
     db.session.commit()
+    print("event is =", event)
     return {'event': format_event(event.one())}
 
 
