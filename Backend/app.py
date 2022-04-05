@@ -1,11 +1,14 @@
 from flask import Flask, jsonify, request
+import os
+
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy.orm import relationship
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'DATABASE_URL'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/cs162'
 db = SQLAlchemy(
