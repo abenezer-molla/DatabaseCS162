@@ -4,7 +4,10 @@ from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy.orm import relationship
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/cs162'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'DATABASE_URL'
+
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:password@localhost/cs162'
 db = SQLAlchemy(
     app,
     engine_options={'connect_args': {'connect_timeout': 1000}})
